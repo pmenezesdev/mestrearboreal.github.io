@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lojinha Medieval - Itens Mágicos (Dark Mode)</title>
+    <title>Lojinha Medieval - Itens Mágicos (Versão Dinâmica)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,6 +28,8 @@
         border-radius: 0.75rem;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 5px rgba(139, 92, 246, 0.3);
         transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+        display: flex;
+        flex-direction: column;
       }
       .card:hover {
         transform: translateY(-5px) scale(1.02);
@@ -41,18 +43,27 @@
         border-radius: 9999px;
         border-width: 1px;
         background-color: rgba(255, 255, 255, 0.05);
+        text-transform: capitalize;
       }
-      .rarity-legendary {
+      .rarity-lendario {
         color: #facc15;
         border-color: #facc15;
       }
-      .rarity-very-rare {
+      .rarity-muito-raro {
         color: #60a5fa;
         border-color: #60a5fa;
       }
-      .rarity-rare {
+      .rarity-raro {
         color: #4ade80;
         border-color: #4ade80;
+      }
+      .rarity-incomum {
+        color: #a78bfa;
+        border-color: #a78bfa;
+      }
+      .rarity-comum {
+        color: #9ca3af;
+        border-color: #9ca3af;
       }
 
       .price-tag {
@@ -163,6 +174,18 @@
               >
                 Raro
               </button>
+              <button
+                class="filter-button rarity-filter px-3 py-1 rounded-full"
+                data-rarity="incomum"
+              >
+                Incomum
+              </button>
+              <button
+                class="filter-button rarity-filter px-3 py-1 rounded-full"
+                data-rarity="comum"
+              >
+                Comum
+              </button>
             </div>
           </div>
           <!-- Filtro de Tipo -->
@@ -205,6 +228,18 @@
               >
                 Pergaminho
               </button>
+              <button
+                class="filter-button type-filter px-3 py-1 rounded-full"
+                data-type="equipamento"
+              >
+                Equipamento
+              </button>
+              <button
+                class="filter-button type-filter px-3 py-1 rounded-full"
+                data-type="ferramenta"
+              >
+                Ferramenta
+              </button>
             </div>
           </div>
           <!-- Filtro de Preço -->
@@ -217,7 +252,7 @@
               id="price-filter"
               min="0"
               max="120000"
-              step="1000"
+              step="100"
               value="120000"
               class="w-full"
             />
@@ -237,439 +272,149 @@
         Nenhum item encontrado com os filtros selecionados.
       </p>
 
-      <!-- Container dos Itens -->
+      <!-- Container dos Itens (Será populado via JavaScript) -->
       <main
         id="item-grid"
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-      >
-        <!-- Os itens são criados com data-attributes para filtragem -->
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Coroa do Soberano Esquecido"
-          data-rarity="lendario"
-          data-price="80000"
-          data-type="acessorio"
-          data-sintonizacao="true"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Coroa do Soberano Esquecido
-          </h2>
-          <div class="rarity-tag rarity-legendary mb-3 self-start">
-            Lendário
-          </div>
-          <p class="sintonizacao mb-4">Requer Sintonização</p>
-          <p class="text-gray-300 text-base flex-grow">
-            Uma coroa de ouro escuro e opalescente, cravejada com gemas que
-            parecem conter galáxias distantes. Concede vantagem em testes de
-            Carisma (Persuasão) e Carisma (Intimidação) contra qualquer criatura
-            abaixo do nível de desafio 15. Uma vez por dia, o usuário pode
-            conjurar Comandar (Nível 5) sem gastar um espaço de magia, afetando
-            até 5 criaturas.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            80.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Lâmina Ecoante do Crepúsculo"
-          data-rarity="lendario"
-          data-price="75000"
-          data-type="arma"
-          data-sintonizacao="true"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Lâmina Ecoante do Crepúsculo
-          </h2>
-          <div class="rarity-tag rarity-legendary mb-3 self-start">
-            Lendário
-          </div>
-          <p class="sintonizacao mb-4">Requer Sintonização</p>
-          <p class="text-gray-300 text-base flex-grow">
-            Uma espada longa +3, cuja lâmina emite um brilho fraco que parece
-            absorver a luz. Cada acerto bem-sucedido tem uma chance de silenciar
-            magicamente o alvo por 1 rodada (CD 18 de resistência de
-            Constituição). Três vezes por dia, pode conjurar Dissipar Magia
-            (Nível 5) como uma ação bônus, focando em uma magia ativa no alvo
-            atingido.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            75.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Manto da Translocação Etérea"
-          data-rarity="lendario"
-          data-price="70000"
-          data-type="armadura"
-          data-sintonizacao="true"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Manto da Translocação Etérea
-          </h2>
-          <div class="rarity-tag rarity-legendary mb-3 self-start">
-            Lendário
-          </div>
-          <p class="sintonizacao mb-4">Requer Sintonização</p>
-          <p class="text-gray-300 text-base flex-grow">
-            Um manto de seda cor de neblina que flutua levemente. Concede
-            resistência a dano de força e dano psíquico. Como uma reação, quando
-            alvo de um ataque, o usuário pode se tornar etéreo até o final de
-            seu próximo turno, evitando o ataque e ignorando impedimentos
-            físicos. (Pode ser usado 3 vezes por descanso longo).
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            70.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Orbe da Verdade Resplandecente"
-          data-rarity="muito-raro"
-          data-price="60000"
-          data-type="acessorio"
-          data-sintonizacao="false"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Orbe da Verdade Resplandecente
-          </h2>
-          <div class="rarity-tag rarity-very-rare mb-3 self-start">
-            Muito Raro
-          </div>
-          <div class="h-5"></div>
-          <p class="text-gray-300 text-base flex-grow">
-            Um orbe de cristal multifacetado que pulsa com uma luz interior
-            suave. Permite ao usuário conjurar Detectar Magia à vontade. Uma vez
-            por dia, pode lançar Visão Verdadeira em si mesmo por 10 minutos. O
-            orbe também revela auras de mentira; qualquer criatura que profira
-            uma falsidade a 9 metros do orbe faz com que ele brilhe
-            intensamente.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            60.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Manopla do Artesão Divino"
-          data-rarity="lendario"
-          data-price="65000"
-          data-type="acessorio"
-          data-sintonizacao="true"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Manopla do Artesão Divino
-          </h2>
-          <div class="rarity-tag rarity-legendary mb-3 self-start">
-            Lendário
-          </div>
-          <p class="sintonizacao mb-4">Requer Sintonização</p>
-          <p class="text-gray-300 text-base flex-grow">
-            Uma única manopla de adamante decorada com runas celestiais. O
-            usuário ganha proficiência em todas as ferramentas de artesão. Uma
-            vez por semana, a manopla pode conjurar Criação (Nível 7) ou Mão
-            Poderosa de Bigby (Nível 5), sem gastar um espaço de magia, usando
-            os materiais necessários ou conjurando a mão.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            65.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Pergaminho de Aprisionamento"
-          data-rarity="lendario"
-          data-price="50000"
-          data-type="pergaminho"
-          data-sintonizacao="false"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Pergaminho de Aprisionamento
-          </h2>
-          <div class="rarity-tag rarity-legendary mb-3 self-start">
-            Lendário
-          </div>
-          <div class="h-5"></div>
-          <p class="text-gray-300 text-base flex-grow">
-            Um pergaminho antigo e selado com cera escura, contendo o poderoso
-            feitiço de aprisionamento. Usar este pergaminho consome-o.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            50.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Tomo da Transfiguração Universal"
-          data-rarity="lendario"
-          data-price="90000"
-          data-type="tomo"
-          data-sintonizacao="false"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Tomo da Transfiguração Universal
-          </h2>
-          <div class="rarity-tag rarity-legendary mb-3 self-start">
-            Lendário
-          </div>
-          <div class="h-5"></div>
-          <p class="text-gray-300 text-base flex-grow">
-            Um livro encadernado em couro de dragão, cujas páginas parecem
-            reescrever-se. Contém rituais para alterar fundamentalmente a forma
-            de objetos e seres. Requer um teste de Inteligência (Arcana) CD 20
-            para entender e aplicar os rituais corretamente.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            90.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Pergaminho de Parar o Tempo"
-          data-rarity="lendario"
-          data-price="45000"
-          data-type="pergaminho"
-          data-sintonizacao="false"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Pergaminho de Parar o Tempo
-          </h2>
-          <div class="rarity-tag rarity-legendary mb-3 self-start">
-            Lendário
-          </div>
-          <div class="h-5"></div>
-          <p class="text-gray-300 text-base flex-grow">
-            Um pergaminho fino e cintilante que permite ao conjurador manipular
-            a própria linha do tempo para tomar ações sem que o tempo passe para
-            os outros.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            45.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Códex dos Portais Estelares"
-          data-rarity="lendario"
-          data-price="120000"
-          data-type="tomo"
-          data-sintonizacao="true"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Códex dos Portais Estelares
-          </h2>
-          <div class="rarity-tag rarity-legendary mb-3 self-start">
-            Lendário
-          </div>
-          <p class="sintonizacao mb-4">
-            Requer Estudo Intensivo e Sintonização
-          </p>
-          <p class="text-gray-300 text-base flex-grow">
-            Um pesado volume de metal incrustado com gemas que brilham como
-            estrelas. Contém rituais e coordenadas para abrir portais para
-            locais exóticos. A abertura de cada portal consome componentes caros
-            e tempo.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            120.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Poção da Potência Absoluta"
-          data-rarity="muito-raro"
-          data-price="3000"
-          data-type="consumivel"
-          data-sintonizacao="false"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Poção da Potência Absoluta
-          </h2>
-          <div class="rarity-tag rarity-very-rare mb-3 self-start">
-            Muito Raro
-          </div>
-          <div class="h-5"></div>
-          <p class="text-gray-300 text-base flex-grow">
-            Uma poção dourada e borbulhante. Por 1 minuto após o consumo, todos
-            os ataques mágicos e físicos do usuário causam um dado de dano extra
-            do tipo de dano principal.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            3.000 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Pó de Desaparecimento Completo"
-          data-rarity="raro"
-          data-price="1500"
-          data-type="consumivel"
-          data-sintonizacao="false"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Pó de Desaparecimento Completo
-          </h2>
-          <div class="rarity-tag rarity-rare mb-3 self-start">Raro</div>
-          <div class="h-5"></div>
-          <p class="text-gray-300 text-base flex-grow">
-            Um pequeno saco de pó prateado. Ao ser jogado sobre uma criatura ou
-            objeto, o alvo se torna invisível e não rastreável por magias por 1
-            hora. O efeito é quebrado se o alvo atacar ou conjurar uma magia.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            1.500 PO
-          </div>
-        </div>
-
-        <div
-          class="card p-6 flex flex-col item-card"
-          data-name="Sementes do Guardião Elemental"
-          data-rarity="muito-raro"
-          data-price="4000"
-          data-type="consumivel"
-          data-sintonizacao="false"
-        >
-          <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">
-            Sementes do Guardião Elemental
-          </h2>
-          <div class="rarity-tag rarity-very-rare mb-3 self-start">
-            Muito Raro
-          </div>
-          <div class="h-5"></div>
-          <p class="text-gray-300 text-base flex-grow">
-            Três sementes cristalinas. Ao serem plantadas, cada semente brota em
-            um elemental Grande (Terra, Água, Fogo ou Ar) que serve o conjurador
-            por 10 minutos.
-          </p>
-          <div
-            class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3"
-          >
-            4.000 PO
-          </div>
-        </div>
-      </main>
+      ></main>
     </div>
 
     <script>
-      // Lógica de filtragem
       document.addEventListener("DOMContentLoaded", () => {
+        // Seletores dos elementos do DOM
         const nameFilter = document.getElementById("name-filter");
         const priceFilter = document.getElementById("price-filter");
         const priceValue = document.getElementById("price-value");
         const rarityFilters = document.querySelectorAll(".rarity-filter");
         const typeFilters = document.querySelectorAll(".type-filter");
-        const itemCards = document.querySelectorAll(".item-card");
         const resetButton = document.getElementById("reset-filters");
         const noResultsMessage = document.getElementById("no-results");
+        const itemGrid = document.getElementById("item-grid");
 
+        // Variáveis para guardar os filtros ativos e os dados dos itens
         let activeRarities = [];
         let activeTypes = [];
+        let allItems = []; // <-- Esta variável guardará os itens carregados do JSON
 
+        // Função para renderizar os itens na tela
+        function renderItems(itemsToRender) {
+          itemGrid.innerHTML = ""; // Limpa a grade antes de renderizar
+
+          if (itemsToRender.length === 0) {
+            noResultsMessage.style.display = "block";
+          } else {
+            noResultsMessage.style.display = "none";
+          }
+
+          itemsToRender.forEach((item) => {
+            const sintonizacaoHTML = item.sintonizacao
+              ? `<p class="sintonizacao mb-4">Requer Sintonização</p>`
+              : `<div class="h-10"></div>`;
+            const raridadeClass = item.raridade
+              .replace(/ /g, "-")
+              .toLowerCase(); // Ex: "muito-raro"
+            const cardHTML = `
+                    <div class="card p-6">
+                        <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">${
+                          item.nome
+                        }</h2>
+                        <div class="rarity-tag rarity-${raridadeClass} mb-3 self-start">${
+              item.raridade
+            }</div>
+                        ${sintonizacaoHTML}
+                        <p class="text-gray-300 text-base flex-grow">${
+                          item.descricao
+                        }</p>
+                        <div class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3">${item.preco.toLocaleString(
+                          "pt-BR"
+                        )} PO</div>
+                    </div>
+                `;
+            itemGrid.innerHTML += cardHTML;
+          });
+        }
+
+        // Função principal para aplicar todos os filtros
         function applyFilters() {
           const nameQuery = nameFilter.value.toLowerCase();
           const maxPrice = parseInt(priceFilter.value);
-          let visibleItems = 0;
 
-          itemCards.forEach((card) => {
-            const name = card.dataset.name.toLowerCase();
-            const price = parseInt(card.dataset.price);
-            const rarity = card.dataset.rarity;
-            const type = card.dataset.type;
-
-            const nameMatch = name.includes(nameQuery);
-            const priceMatch = price <= maxPrice;
+          let filteredItems = allItems.filter((item) => {
+            const nameMatch = item.nome.toLowerCase().includes(nameQuery);
+            const priceMatch = item.preco <= maxPrice;
             const rarityMatch =
-              activeRarities.length === 0 || activeRarities.includes(rarity);
+              activeRarities.length === 0 ||
+              activeRarities.includes(item.raridade);
             const typeMatch =
-              activeTypes.length === 0 || activeTypes.includes(type);
-
-            if (nameMatch && priceMatch && rarityMatch && typeMatch) {
-              card.style.display = "flex";
-              visibleItems++;
-            } else {
-              card.style.display = "none";
-            }
+              activeTypes.length === 0 || activeTypes.includes(item.tipo);
+            return (
+              nameMatch && priceMatch && priceMatch && rarityMatch && typeMatch
+            );
           });
 
-          noResultsMessage.style.display =
-            visibleItems === 0 ? "block" : "none";
+          renderItems(filteredItems);
         }
 
-        nameFilter.addEventListener("input", applyFilters);
-        priceFilter.addEventListener("input", () => {
-          priceValue.textContent = priceFilter.value;
-          applyFilters();
-        });
+        // Função para configurar os botões de filtro (Raridade e Tipo)
+        function setupFilterButtons(buttons, activeList) {
+          buttons.forEach((button) => {
+            button.addEventListener("click", () => {
+              button.classList.toggle("active");
+              const filterValue = button.dataset.rarity || button.dataset.type;
 
-        rarityFilters.forEach((button) => {
-          button.addEventListener("click", () => {
-            button.classList.toggle("active");
-            const rarity = button.dataset.rarity;
-            if (activeRarities.includes(rarity)) {
-              activeRarities = activeRarities.filter((r) => r !== rarity);
-            } else {
-              activeRarities.push(rarity);
-            }
-            applyFilters();
+              const index = activeList.indexOf(filterValue);
+              if (index > -1) {
+                activeList.splice(index, 1);
+              } else {
+                activeList.push(filterValue);
+              }
+              applyFilters();
+            });
           });
-        });
+        }
 
-        typeFilters.forEach((button) => {
-          button.addEventListener("click", () => {
-            button.classList.toggle("active");
-            const type = button.dataset.type;
-            if (activeTypes.includes(type)) {
-              activeTypes = activeTypes.filter((t) => t !== type);
-            } else {
-              activeTypes.push(type);
+        // ===================================================================================
+        // CARREGAMENTO DOS DADOS DO JSON
+        // O script busca o arquivo 'itens.json' e, quando os dados chegam, inicia a loja.
+        // ===================================================================================
+        fetch("itens.json")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Erro de rede! Status: ${response.status}`);
             }
-            applyFilters();
-          });
-        });
+            return response.json();
+          })
+          .then((data) => {
+            allItems = data; // Armazena os dados carregados na variável global
 
-        resetButton.addEventListener("click", () => {
-          nameFilter.value = "";
-          priceFilter.value = 120000;
-          priceValue.textContent = 120000;
-          activeRarities = [];
-          activeTypes = [];
-          rarityFilters.forEach((btn) => btn.classList.remove("active"));
-          typeFilters.forEach((btn) => btn.classList.remove("active"));
-          applyFilters();
-        });
+            // Configuração dos Eventos (Listeners)
+            nameFilter.addEventListener("input", applyFilters);
+            priceFilter.addEventListener("input", () => {
+              priceValue.textContent = parseInt(
+                priceFilter.value
+              ).toLocaleString("pt-BR");
+              applyFilters();
+            });
+            setupFilterButtons(rarityFilters, activeRarities);
+            setupFilterButtons(typeFilters, activeTypes);
+            resetButton.addEventListener("click", () => {
+              nameFilter.value = "";
+              priceFilter.value = 120000;
+              priceValue.textContent = "120.000";
+              activeRarities = [];
+              activeTypes = [];
+              rarityFilters.forEach((btn) => btn.classList.remove("active"));
+              typeFilters.forEach((btn) => btn.classList.remove("active"));
+              applyFilters();
+            });
+
+            // Renderização inicial dos itens após o carregamento
+            applyFilters();
+          })
+          .catch((error) => {
+            console.error("Falha ao carregar os itens da loja:", error);
+            itemGrid.innerHTML = `<p class="text-red-400 col-span-full text-center">Não foi possível carregar os itens da loja. Verifique o console para mais detalhes.</p>`;
+          });
       });
     </script>
   </body>
