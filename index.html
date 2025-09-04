@@ -1,421 +1,528 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lojinha de Sigil</title>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Empório de Tesouros de Sigil</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=IM+Fell+English+SC&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=MedievalSharp&display=swap" rel="stylesheet">
     <style>
-      body {
-        background-color: #1a1d24;
-        background-image: url("https://www.transparenttextures.com/patterns/dark-stone-wall.png");
-        font-family: "Cinzel", serif;
-        color: #e0e0e0;
-      }
-      .font-title {
-        font-family: "IM Fell English SC", serif;
-      }
-      .card {
-        background-color: rgba(30, 34, 44, 0.8);
-        border: 1px solid #4a5568;
-        backdrop-filter: blur(5px);
-        border-radius: 0.75rem;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 5px rgba(139, 92, 246, 0.3);
-        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
-        display: flex;
-        flex-direction: column;
-      }
-      .card:hover {
-        transform: translateY(-5px) scale(1.02);
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.7),
-          0 0 10px rgba(139, 92, 246, 0.5);
-      }
-      .rarity-tag {
-        padding: 0.25rem 0.75rem;
-        font-size: 0.8rem;
-        font-weight: 600;
-        border-radius: 9999px;
-        border-width: 1px;
-        background-color: rgba(255, 255, 255, 0.05);
-        text-transform: capitalize;
-      }
-      .rarity-lendario {
-        color: #facc15;
-        border-color: #facc15;
-      }
-      .rarity-muito-raro {
-        color: #60a5fa;
-        border-color: #60a5fa;
-      }
-      .rarity-raro {
-        color: #4ade80;
-        border-color: #4ade80;
-      }
-      .rarity-incomum {
-        color: #a78bfa;
-        border-color: #a78bfa;
-      }
-      .rarity-comum {
-        color: #9ca3af;
-        border-color: #9ca3af;
-      }
+        body {
+            background-color: #1a1a1a;
+            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            font-family: 'MedievalSharp', cursive;
+        }
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        .font-medieval {
+            font-family: 'MedievalSharp', cursive;
+        }
+        .item-card {
+            background-color: rgba(26, 26, 38, 0.7);
+            border: 1px solid #4a4a68;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .item-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 20px rgba(180, 150, 255, 0.5);
+            border-color: #b496ff;
+        }
+        .rarity-common { border-left: 5px solid #a3a3a3; }
+        .rarity-uncommon { border-left: 5px solid #22c55e; }
+        .rarity-rare { border-left: 5px solid #3b82f6; }
+        .rarity-very-rare { border-left: 5px solid #a855f7; }
+        .rarity-legendary { border-left: 5px solid #f97316; }
 
-      .price-tag {
-        background-color: rgba(0, 0, 0, 0.3);
-        color: #fde047;
-        border-top: 1px solid #4a5568;
-      }
-      .sintonizacao {
-        font-style: italic;
-        font-size: 0.9em;
-        color: #a0aec0;
-      }
+        .text-rarity-common { color: #a3a3a3; }
+        .text-rarity-uncommon { color: #22c55e; }
+        .text-rarity-rare { color: #3b82f6; }
+        .text-rarity-very-rare { color: #a855f7; }
+        .text-rarity-legendary { color: #f97316; }
 
-      /* Estilos para Filtros */
-      .filter-container {
-        background-color: rgba(30, 34, 44, 0.7);
-        backdrop-filter: blur(5px);
-        border: 1px solid #4a5568;
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        margin-bottom: 3rem;
-      }
-      .filter-label {
-        color: #cbd5e0;
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-      }
-      .filter-input {
-        background-color: rgba(45, 55, 72, 0.8);
-        border: 1px solid #4a5568;
-        color: #e2e8f0;
-        border-radius: 0.5rem;
-      }
-      .filter-button {
-        background-color: transparent;
-        border: 1px solid #4a5568;
-        color: #a0aec0;
-        transition: all 0.2s ease;
-      }
-      .filter-button.active {
-        background-color: #fde047;
-        color: #1a1d24;
-        border-color: #fde047;
-        font-weight: bold;
-      }
-      .filter-button:hover:not(.active) {
-        background-color: #4a5568;
-        color: #e2e8f0;
-      }
-      .reset-button {
-        background-color: #7f1d1d;
-        border: 1px solid #fca5a5;
-        color: #fca5a5;
-      }
-      .reset-button:hover {
-        background-color: #991b1b;
-      }
+        #searchInput {
+            background-color: rgba(10, 10, 20, 0.6);
+            border: 1px solid #4a4a68;
+        }
+        #searchInput:focus {
+            border-color: #b496ff;
+            box-shadow: 0 0 15px rgba(180, 150, 255, 0.3);
+            outline: none;
+        }
+        .category-title {
+            text-shadow: 1px 1px 3px #000;
+        }
+        #backToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            border: 1px solid #b496ff;
+            outline: none;
+            background-color: rgba(26, 26, 38, 0.8);
+            color: #b496ff;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 50%;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        #backToTopBtn:hover {
+            background-color: #b496ff;
+            color: #1a1a26;
+        }
     </style>
-  </head>
-  <body class="p-4 sm:p-8">
-    <div class="container mx-auto">
-      <header class="text-center mb-12">
-        <h1
-          class="font-title text-5xl md:text-7xl text-yellow-300"
-          style="text-shadow: 0 0 8px rgba(252, 211, 77, 0.5), 0 0 2px #000"
-        >
-          A Forja do Aventureiro
-        </h1>
-        <p class="text-xl text-gray-300 mt-2">
-          Relíquias e curiosidades para os mais bravos
-        </p>
-      </header>
+</head>
+<body class="text-gray-200">
 
-      <!-- Seção de Filtros -->
-      <div id="filters" class="filter-container">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- Filtro de Nome -->
-          <div>
-            <label for="name-filter" class="block filter-label"
-              >Nome do Item</label
-            >
-            <input
-              type="text"
-              id="name-filter"
-              class="w-full p-2 filter-input"
-              placeholder="Buscar por nome..."
-            />
-          </div>
-          <!-- Filtro de Raridade -->
-          <div>
-            <label class="block filter-label">Raridade</label>
-            <div class="flex flex-wrap gap-2">
-              <button
-                class="filter-button rarity-filter px-3 py-1 rounded-full"
-                data-rarity="lendario"
-              >
-                Lendário
-              </button>
-              <button
-                class="filter-button rarity-filter px-3 py-1 rounded-full"
-                data-rarity="muito-raro"
-              >
-                Muito Raro
-              </button>
-              <button
-                class="filter-button rarity-filter px-3 py-1 rounded-full"
-                data-rarity="raro"
-              >
-                Raro
-              </button>
-              <button
-                class="filter-button rarity-filter px-3 py-1 rounded-full"
-                data-rarity="incomum"
-              >
-                Incomum
-              </button>
-              <button
-                class="filter-button rarity-filter px-3 py-1 rounded-full"
-                data-rarity="comum"
-              >
-                Comum
-              </button>
-            </div>
-          </div>
-          <!-- Filtro de Tipo -->
-          <div>
-            <label class="block filter-label">Tipo de Item</label>
-            <div class="flex flex-wrap gap-2">
-              <button
-                class="filter-button type-filter px-3 py-1 rounded-full"
-                data-type="acessorio"
-              >
-                Acessório
-              </button>
-              <button
-                class="filter-button type-filter px-3 py-1 rounded-full"
-                data-type="arma"
-              >
-                Arma
-              </button>
-              <button
-                class="filter-button type-filter px-3 py-1 rounded-full"
-                data-type="armadura"
-              >
-                Armadura
-              </button>
-              <button
-                class="filter-button type-filter px-3 py-1 rounded-full"
-                data-type="consumivel"
-              >
-                Consumível
-              </button>
-              <button
-                class="filter-button type-filter px-3 py-1 rounded-full"
-                data-type="tomo"
-              >
-                Tomo
-              </button>
-              <button
-                class="filter-button type-filter px-3 py-1 rounded-full"
-                data-type="pergaminho"
-              >
-                Pergaminho
-              </button>
-              <button
-                class="filter-button type-filter px-3 py-1 rounded-full"
-                data-type="equipamento"
-              >
-                Equipamento
-              </button>
-              <button
-                class="filter-button type-filter px-3 py-1 rounded-full"
-                data-type="ferramenta"
-              >
-                Ferramenta
-              </button>
-            </div>
-          </div>
-          <!-- Filtro de Preço -->
-          <div>
-            <label for="price-filter" class="block filter-label"
-              >Preço Máximo: <span id="price-value">120000</span> PO</label
-            >
-            <input
-              type="range"
-              id="price-filter"
-              min="0"
-              max="120000"
-              step="100"
-              value="120000"
-              class="w-full"
-            />
-          </div>
+    <!-- Container Principal -->
+    <div id="app" class="container mx-auto p-4 md:p-8">
+
+        <!-- Cabeçalho da Loja -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl md:text-7xl font-bold font-cinzel text-yellow-300" style="text-shadow: 2px 2px 4px #000;">
+                O Empório de Tesouros de Sigil
+            </h1>
+            <p class="mt-4 text-lg text-gray-300 max-w-3xl mx-auto font-medieval">
+                Bem-vindo, viajante dos planos! Em Sigil, a Cidade dos Portais, até os desejos mais arcanos encontram seu preço. Explore nosso inventário de artefatos raros e poções potentes. Que sua bolsa esteja cheia e sua sorte seja grande!
+            </p>
+        </header>
+
+        <!-- Barra de Busca e Navegação -->
+        <div class="sticky top-0 z-10 py-4 mb-8 backdrop-blur-md bg-gray-900/50">
+            <input type="text" id="searchInput" placeholder="Buscar por um item..." class="w-full p-3 rounded-lg text-lg text-gray-200 focus:ring-2 focus:ring-purple-400 transition-all duration-300 ease-in-out">
+            <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mt-4">
+                <a href="#consumables" class="px-3 py-1 bg-purple-900/50 rounded-full hover:bg-purple-800/80 transition-colors">Consumíveis</a>
+                <a href="#combat" class="px-3 py-1 bg-red-900/50 rounded-full hover:bg-red-800/80 transition-colors">Combate</a>
+                <a href="#noncombat" class="px-3 py-1 bg-blue-900/50 rounded-full hover:bg-blue-800/80 transition-colors">Utilitários</a>
+                <a href="#summoning" class="px-3 py-1 bg-green-900/50 rounded-full hover:bg-green-800/80 transition-colors">Invocação</a>
+                <a href="#gamechanging" class="px-3 py-1 bg-yellow-900/50 rounded-full hover:bg-yellow-800/80 transition-colors">Transformadores</a>
+            </nav>
         </div>
-        <div class="text-center mt-6">
-          <button
-            id="reset-filters"
-            class="reset-button px-4 py-2 rounded-lg font-bold"
-          >
-            Limpar Filtros
-          </button>
-        </div>
-      </div>
+        
+        <main id="item-shop">
+            <!-- As seções de itens serão inseridas aqui via JavaScript -->
+        </main>
 
-      <p id="no-results" class="text-center text-xl text-gray-400 hidden">
-        Nenhum item encontrado com os filtros selecionados.
-      </p>
-
-      <!-- Container dos Itens (Será populado via JavaScript) -->
-      <main
-        id="item-grid"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-      ></main>
     </div>
 
+    <!-- Botão Voltar ao Topo -->
+    <button onclick="scrollToTop()" id="backToTopBtn" title="Voltar ao topo">▲</button>
+    
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Seletores dos elementos do DOM
-        const nameFilter = document.getElementById("name-filter");
-        const priceFilter = document.getElementById("price-filter");
-        const priceValue = document.getElementById("price-value");
-        const rarityFilters = document.querySelectorAll(".rarity-filter");
-        const typeFilters = document.querySelectorAll(".type-filter");
-        const resetButton = document.getElementById("reset-filters");
-        const noResultsMessage = document.getElementById("no-results");
-        const itemGrid = document.getElementById("item-grid");
+        const items = [
+            // Consumables
+            { name: "Pergaminho de Proteção", price: 180, rarity: "Raro", category: "consumables" },
+            { name: "Pigmentos Maravilhosos de Nolzur", price: 200, rarity: "Muito Raro", category: "consumables" },
+            { name: "Poção da Amizade Animal", price: 200, rarity: "Incomum", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 3", price: 200, rarity: "Incomum", category: "consumables" },
+            { name: "Pena Mágica de Quaal (Leque)", price: 250, rarity: "Raro", category: "consumables" },
+            { name: "Pena Mágica de Quaal (Chicote)", price: 250, rarity: "Raro", category: "consumables" },
+            { name: "Poção da Diminuição", price: 270, rarity: "Raro", category: "consumables" },
+            { name: "Poção do Crescimento", price: 270, rarity: "Incomum", category: "consumables" },
+            { name: "Pó do Desaparecimento", price: 300, rarity: "Incomum", category: "consumables" },
+            { name: "Colar de Bolas de Fogo (1 conta)", price: 300, rarity: "Raro", category: "consumables" },
+            { name: "Poção da Forma Gasosa", price: 300, rarity: "Raro", category: "consumables" },
+            { name: "Poção de Resistência", price: 300, rarity: "Incomum", category: "consumables" },
+            { name: "Solvente Universal", price: 300, rarity: "Lendário", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 4", price: 320, rarity: "Raro", category: "consumables" },
+            { name: "Munição +3 (un)", price: 400, rarity: "Muito Raro", category: "consumables" },
+            { name: "Poção da Velocidade", price: 400, rarity: "Muito Raro", category: "consumables" },
+            { name: "Cola Soberana", price: 400, rarity: "Lendário", category: "consumables" },
+            { name: "Berrante da Destruição", price: 450, rarity: "Raro", category: "consumables" },
+            { name: "Poção de Cura Superior", price: 450, rarity: "Muito Raro", category: "consumables" },
+            { name: "Pó do Espirro e Engasgo", price: 480, rarity: "Incomum", category: "consumables" },
+            { name: "Colar de Bolas de Fogo (2 contas)", price: 480, rarity: "Raro", category: "consumables" },
+            { name: "Óleo da Escorregadia", price: 480, rarity: "Incomum", category: "consumables" },
+            { name: "Poção do Voo", price: 500, rarity: "Muito Raro", category: "consumables" },
+            { name: "Flecha Assassina (un)", price: 600, rarity: "Muito Raro", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 5", price: 640, rarity: "Raro", category: "consumables" },
+            { name: "Conta de Força", price: 960, rarity: "Raro", category: "consumables" },
+            { name: "Gema Elemental", price: 960, rarity: "Incomum", category: "consumables" },
+            { name: "Colar de Bolas de Fogo (3 contas)", price: 960, rarity: "Raro", category: "consumables" },
+            { name: "Poção da Clarividência", price: 960, rarity: "Raro", category: "consumables" },
+            { name: "Poção da Vitalidade", price: 960, rarity: "Muito Raro", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 6", price: 1280, rarity: "Muito Raro", category: "consumables" },
+            { name: "Poção de Cura Suprema", price: 1350, rarity: "Muito Raro", category: "consumables" },
+            { name: "Sino da Abertura", price: 1500, rarity: "Raro", category: "consumables" },
+            { name: "Óleo da Etéreidade", price: 1920, rarity: "Raro", category: "consumables" },
+            { name: "Pedra Iônica (Absorção)", price: 2400, rarity: "Muito Raro", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 7", price: 2560, rarity: "Muito Raro", category: "consumables" },
+            { name: "Pena Mágica de Quaal (Pássaro)", price: 3000, rarity: "Raro", category: "consumables" },
+            { name: "Pena Mágica de Quaal (Barco Cisne)", price: 3000, rarity: "Raro", category: "consumables" },
+            { name: "Óleo da Precisão", price: 3200, rarity: "Muito Raro", category: "consumables" },
+            { name: "Colar de Bolas de Fogo (5 contas)", price: 3840, rarity: "Raro", category: "consumables" },
+            { name: "Poção da Invulnerabilidade", price: 3840, rarity: "Raro", category: "consumables" },
+            { name: "Gema do Esplendor", price: 5000, rarity: "Incomum", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 8", price: 5120, rarity: "Muito Raro", category: "consumables" },
+            { name: "Baralho das Ilusões", price: 6120, rarity: "Incomum", category: "consumables" },
+            { name: "Colar de Bolas de Fogo (6 contas)", price: 7680, rarity: "Raro", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 9", price: 10240, rarity: "Lendário", category: "consumables" },
+            { name: "Pedra Iônica (Absorção Maior)", price: 31000, rarity: "Lendário", category: "consumables" },
+            { name: "Cajado da Absorção", price: 50000, rarity: "Muito Raro", category: "consumables" },
+            { name: "Talismã do Mal Supremo", price: 61440, rarity: "Lendário", category: "consumables" },
+            { name: "Talismã do Bem Puro", price: 71680, rarity: "Lendário", category: "consumables" },
+            { name: "Manto dos Itens Úteis", price: "Itens * 5", rarity: "Incomum", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 0", price: 10, rarity: "Comum", category: "consumables" },
+            { name: "Munição +1 (un)", price: 25, rarity: "Incomum", category: "consumables" },
+            { name: "Poção de Cura", price: 50, rarity: "Comum", category: "consumables" },
+            { name: "Pena Mágica de Quaal (Âncora)", price: 50, rarity: "Raro", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 1", price: 60, rarity: "Comum", category: "consumables" },
+            { name: "Filtro do Amor", price: 90, rarity: "Incomum", category: "consumables" },
+            { name: "Munição +2 (un)", price: 100, rarity: "Raro", category: "consumables" },
+            { name: "Poção de Veneno", price: 100, rarity: "Incomum", category: "consumables" },
+            { name: "Pó da Secura (1 pelota)", price: 120, rarity: "Incomum", category: "consumables" },
+            { name: "Elixir da Saúde", price: 120, rarity: "Raro", category: "consumables" },
+            { name: "Unguento de Keoghtom (por dose)", price: 120, rarity: "Incomum", category: "consumables" },
+            { name: "Pergaminho de Magia Nível 2", price: 120, rarity: "Incomum", category: "consumables" },
+            { name: "Poção do Sopro de Fogo", price: 150, rarity: "Incomum", category: "consumables" },
+            { name: "Poção de Cura Maior", price: 150, rarity: "Incomum", category: "consumables" },
+            { name: "Poção de Escalada", price: 180, rarity: "Comum", category: "consumables" },
+            { name: "Poção do Heroísmo", price: 180, rarity: "Raro", category: "consumables" },
+            { name: "Poção da Invisibilidade", price: 180, rarity: "Muito Raro", category: "consumables" },
+            { name: "Poção da Leitura Mental", price: 180, rarity: "Raro", category: "consumables" },
+            { name: "Poção da Respiração Aquática", price: 180, rarity: "Incomum", category: "consumables" },
+            // Combat Items
+            { name: "Arma Atroz", price: 350, rarity: "Raro", category: "combat" },
+            { name: "Armadura de Adamante", price: 500, rarity: "Incomum", category: "combat" },
+            { name: "Armadura de Mitral", price: 800, rarity: "Incomum", category: "combat" },
+            { name: "Arma +1", price: 1000, rarity: "Incomum", category: "combat" },
+            { name: "Espada Ladra de Vidas", price: 1000, rarity: "Raro", category: "combat" },
+            { name: "Pedra Iônica (Proteção)", price: 1200, rarity: "Raro", category: "combat" },
+            { name: "Varinha do Mago de Guerra +1", price: 1200, rarity: "Incomum", category: "combat" },
+            { name: "Braçadeiras de Arquearia", price: 1500, rarity: "Incomum", category: "combat" },
+            { name: "Círculo da Destruição", price: 1500, rarity: "Incomum", category: "combat" },
+            { name: "Azagaia do Relâmpago", price: 1500, rarity: "Incomum", category: "combat" },
+            { name: "Conta de Oração (Punição)", price: 1500, rarity: "Raro", category: "combat" },
+            { name: "Leque de Vento", price: 1500, rarity: "Incomum", category: "combat" },
+            { name: "Espada da Precisão", price: 1700, rarity: "Raro", category: "combat" },
+            { name: "Cajado da Víbora", price: 1800, rarity: "Incomum", category: "combat" },
+            { name: "Espada Dançarina", price: 2000, rarity: "Muito Raro", category: "combat" },
+            { name: "Couro Batido Glamourizado", price: 2000, rarity: "Raro", category: "combat" },
+            { name: "Flauta dos Esgotos", price: 2000, rarity: "Incomum", category: "combat" },
+            { name: "Conta de Oração (Bênção)", price: 2000, rarity: "Raro", category: "combat" },
+            { name: "Sela do Cavaleiro", price: 2000, rarity: "Incomum", category: "combat" },
+            { name: "Espada do Ferimento", price: 2000, rarity: "Raro", category: "combat" },
+            { name: "Marca de Gelo", price: 2200, rarity: "Muito Raro", category: "combat" },
+            { name: "Adaga de Veneno", price: 2500, rarity: "Raro", category: "combat" },
+            { name: "Luvas de Apanhar Projéteis", price: 3000, rarity: "Incomum", category: "combat" },
+            { name: "Pedra Iônica (Agilidade)", price: 3000, rarity: "Muito Raro", category: "combat" },
+            { name: "Pedra Iônica (Fortitude)", price: 3000, rarity: "Muito Raro", category: "combat" },
+            { name: "Pedra Iônica (Intuição)", price: 3000, rarity: "Muito Raro", category: "combat" },
+            { name: "Pedra Iônica (Intelecto)", price: 3000, rarity: "Muito Raro", category: "combat" },
+            { name: "Pedra Iônica (Liderança)", price: 3000, rarity: "Muito Raro", category: "combat" },
+            { name: "Pedra Iônica (Força)", price: 3000, rarity: "Muito Raro", category: "combat" },
+            { name: "Cajado do Definhamento", price: 3000, rarity: "Raro", category: "combat" },
+            { name: "Manto da Proteção", price: 3500, rarity: "Incomum", category: "combat" },
+            { name: "Arco do Juramento", price: 3500, rarity: "Muito Raro", category: "combat" },
+            { name: "Anel de Proteção", price: 3500, rarity: "Raro", category: "combat" },
+            { name: "Arma +2", price: 4000, rarity: "Raro", category: "combat" },
+            { name: "Botas da Velocidade", price: 4000, rarity: "Raro", category: "combat" },
+            { name: "Armadura de Escamas de Dragão", price: 4000, rarity: "Muito Raro", category: "combat" },
+            { name: "Cota de Malha Élfica", price: 4000, rarity: "Raro", category: "combat" },
+            { name: "Pedra Iônica (Regeneração)", price: 4000, rarity: "Lendário", category: "combat" },
+            { name: "Braceletes de Ferro de Bilarro", price: 4000, rarity: "Raro", category: "combat" },
+            { name: "Conta de Oração (Cura)", price: 4000, rarity: "Raro", category: "combat" },
+            { name: "Corda do Estrangulamento", price: 4000, rarity: "Raro", category: "combat" },
+            { name: "Varinha da Detecção de Inimigos", price: 4000, rarity: "Raro", category: "combat" },
+            { name: "Pedra da Sorte", price: 4200, rarity: "Incomum", category: "combat" },
+            { name: "Varinha do Mago de Guerra +2", price: 4800, rarity: "Raro", category: "combat" },
+            { name: "Língua de Fogo", price: 5000, rarity: "Raro", category: "combat" },
+            { name: "Amuleto Contra Ferimentos", price: 5000, rarity: "Incomum", category: "combat" },
+            { name: "Anel da Evasão", price: 5000, rarity: "Raro", category: "combat" },
+            { name: "Anel do Aríete", price: 5000, rarity: "Raro", category: "combat" },
+            { name: "Vara Tentacular", price: 5000, rarity: "Raro", category: "combat" },
+            { name: "Escudo Animado", price: 6000, rarity: "Muito Raro", category: "combat" },
+            { name: "Armadura de Resistência", price: 6000, rarity: "Raro", category: "combat" },
+            { name: "Escudo de Aparar Flechas", price: 6000, rarity: "Raro", category: "combat" },
+            { name: "Cinto do Anão", price: 6000, rarity: "Raro", category: "combat" },
+            { name: "Braçadeiras de Defesa", price: 6000, rarity: "Raro", category: "combat" },
+            { name: "Pedra Iônica (Reserva)", price: 6000, rarity: "Raro", category: "combat" },
+            { name: "Pérola do Poder", price: 6000, rarity: "Incomum", category: "combat" },
+            { name: "Flauta Assombrada", price: 6000, rarity: "Incomum", category: "combat" },
+            { name: "Anel de Resistência", price: 6000, rarity: "Raro", category: "combat" },
+            { name: "Manto das Cores Cintilantes", price: 6000, rarity: "Muito Raro", category: "combat" },
+            { name: "Cimitarra da Velocidade", price: 6000, rarity: "Muito Raro", category: "combat" },
+            { name: "Escudo de Atração de Projéteis", price: 6000, rarity: "Raro", category: "combat" },
+            { name: "Matadora de Gigantes", price: 7000, rarity: "Raro", category: "combat" },
+            { name: "Maça da Destruição", price: 7000, rarity: "Raro", category: "combat" },
+            { name: "Broche do Escudo", price: 7500, rarity: "Incomum", category: "combat" },
+            { name: "Amuleto da Saúde", price: 8000, rarity: "Raro", category: "combat" },
+            { name: "Matadora de Dragões", price: 8000, rarity: "Raro", category: "combat" },
+            { name: "Manoplas da Força do Ogro", price: 8000, rarity: "Incomum", category: "combat" },
+            { name: "Bandana do Intelecto", price: 8000, rarity: "Incomum", category: "combat" },
+            { name: "Maça da Perturbação", price: 8000, rarity: "Raro", category: "combat" },
+            { name: "Maça do Terror", price: 8000, rarity: "Raro", category: "combat" },
+            { name: "Ladra das Nove Vidas", price: 8000, rarity: "Muito Raro", category: "combat" },
+            { name: "Varinha de Mísseis Mágicos", price: 8000, rarity: "Incomum", category: "combat" },
+            { name: "Varinha da Teia", price: 8000, rarity: "Incomum", category: "combat" },
+            { name: "Cajado do Trovão e Relâmpago", price: 10000, rarity: "Muito Raro", category: "combat" },
+            { name: "Varinha da Imobilização", price: 10000, rarity: "Raro", category: "combat" },
+            { name: "Varinha do Medo", price: 10000, rarity: "Raro", category: "combat" },
+            { name: "Pedra Iônica (Prontidão)", price: 12000, rarity: "Raro", category: "combat" },
+            { name: "Cajado do Guardião do Pacto +1", price: 12000, rarity: "Raro", category: "combat" },
+            { name: "Cajado do Encantamento", price: 12000, rarity: "Raro", category: "combat" },
+            { name: "Lâmina do Sol", price: 12000, rarity: "Raro", category: "combat" },
+            { name: "Cajado da Cura", price: 13000, rarity: "Raro", category: "combat" },
+            { name: "Anel de Disparar Estrelas", price: 14000, rarity: "Muito Raro", category: "combat" },
+            { name: "Pedra Iônica (Maestria)", price: 15000, rarity: "Lendário", category: "combat" },
+            { name: "Arma +3", price: 16000, rarity: "Muito Raro", category: "combat" },
+            { name: "Martelo dos Trovões", price: 16000, rarity: "Lendário", category: "combat" },
+            { name: "Cajado do Guardião do Pacto +2", price: 16000, rarity: "Raro", category: "combat" },
+            { name: "Cajado do Fogo", price: 16000, rarity: "Muito Raro", category: "combat" },
+            { name: "Cajado do Enxame de Insetos", price: 16000, rarity: "Raro", category: "combat" },
+            { name: "Varinha da Paralisia", price: 16000, rarity: "Raro", category: "combat" },
+            { name: "Anel de Comando Elemental (Fogo)", price: 17000, rarity: "Lendário", category: "combat" },
+            { name: "Arremessador Anão", price: 18000, rarity: "Muito Raro", category: "combat" },
+            { name: "Varinha do Mago de Guerra +3", price: 19200, rarity: "Muito Raro", category: "combat" },
+            { name: "Cota de Malha de Efreeti", price: 20000, rarity: "Lendário", category: "combat" },
+            { name: "Anel da Ação Livre", price: 20000, rarity: "Raro", category: "combat" },
+            { name: "Escudo Sentinela", price: 20000, rarity: "Incomum", category: "combat" },
+            { name: "Cajado do Ataque", price: 21000, rarity: "Muito Raro", category: "combat" },
+            { name: "Anel de Armazenar Magia", price: 24000, rarity: "Raro", category: "combat" },
+            { name: "Espada Vorpal", price: 24000, rarity: "Lendário", category: "combat" },
+            { name: "Anel de Comando Elemental (Água)", price: 25000, rarity: "Lendário", category: "combat" },
+            { name: "Vara do Alerta", price: 25000, rarity: "Muito Raro", category: "combat" },
+            { name: "Cajado do Gelo", price: 26000, rarity: "Muito Raro", category: "combat" },
+            { name: "Bandolim de Fochlucan", price: 26500, rarity: "Incomum", category: "combat" },
+            { name: "Cítara de Mac-Fuirmidh", price: 27000, rarity: "Incomum", category: "combat" },
+            { name: "Vara do Poder Soberano", price: 28000, rarity: "Lendário", category: "combat" },
+            { name: "Cajado do Guardião do Pacto +3", price: 28000, rarity: "Muito Raro", category: "combat" },
+            { name: "Alaúde de Doss", price: 28500, rarity: "Incomum", category: "combat" },
+            { name: "Bandolim de Canaith", price: 30000, rarity: "Raro", category: "combat" },
+            { name: "Manto da Resistência à Magia", price: 30000, rarity: "Raro", category: "combat" },
+            { name: "Anel de Reverter Magia", price: 30000, rarity: "Lendário", category: "combat" },
+            { name: "Conta de Oração (Favor)", price: 32000, rarity: "Raro", category: "combat" },
+            { name: "Varinha das Bolas de Fogo", price: 32000, rarity: "Raro", category: "combat" },
+            { name: "Varinha dos Raios", price: 32000, rarity: "Raro", category: "combat" },
+            { name: "Varinha da Metamorfose", price: 32000, rarity: "Muito Raro", category: "combat" },
+            { name: "Lira de Cli", price: 35000, rarity: "Raro", category: "combat" },
+            { name: "Escaravelho da Proteção", price: 36000, rarity: "Lendário", category: "combat" },
+            { name: "Espada Respondona", price: 36000, rarity: "Lendário", category: "combat" },
+            { name: "Cajado dos Bosques", price: 44000, rarity: "Raro", category: "combat" },
+            { name: "Escudo de Proteção contra Magia", price: 50000, rarity: "Muito Raro", category: "combat" },
+            { name: "Manto do Deslocamento", price: 60000, rarity: "Raro", category: "combat" },
+            { name: "Manto das Estrelas", price: 60000, rarity: "Muito Raro", category: "combat" },
+            { name: "Arma do Alerta", price: 60000, rarity: "Incomum", category: "combat" },
+            { name: "Conta de Oração (Andar no Vento)", price: 96000, rarity: "Raro", category: "combat" },
+            { name: "Harpa de Anstruth", price: 109000, rarity: "Muito Raro", category: "combat" },
+            { name: "Harpa de Ollamh", price: 125000, rarity: "Lendário", category: "combat" },
+            { name: "Conta de Oração (Invocação)", price: 128000, rarity: "Raro", category: "combat" },
+            { name: "Vingadora Sagrada", price: 165000, rarity: "Lendário", category: "combat" },
+            // Noncombat Items
+            { name: "Elmo da Compreensão de Idiomas", price: 500, rarity: "Incomum", category: "noncombat" },
+            { name: "Globo de Luz", price: 750, rarity: "Incomum", category: "noncombat" },
+            { name: "Tridente de Comandar Peixes", price: 800, rarity: "Incomum", category: "noncombat" },
+            { name: "Elmo da Respiração Aquática", price: 1000, rarity: "Incomum", category: "noncombat" },
+            { name: "Garrafa de Fumaça Eterna", price: 1000, rarity: "Incomum", category: "noncombat" },
+            { name: "Aljava de Ehlonna", price: 1000, rarity: "Incomum", category: "noncombat" },
+            { name: "Pedra Iônica (Sustento)", price: 1000, rarity: "Raro", category: "noncombat" },
+            { name: "Anel do Aconchego", price: 1000, rarity: "Incomum", category: "noncombat" },
+            { name: "Óculos da Noite", price: 1500, rarity: "Incomum", category: "noncombat" },
+            { name: "Ferraduras do Zéfiro", price: 1500, rarity: "Muito Raro", category: "noncombat" },
+            { name: "Armadura do Marinheiro", price: 1500, rarity: "Incomum", category: "noncombat" },
+            { name: "Colar da Adaptação", price: 1500, rarity: "Incomum", category: "noncombat" },
+            { name: "Anel de Andar na Água", price: 1500, rarity: "Incomum", category: "noncombat" },
+            { name: "Varinha da Detecção de Magia", price: 1500, rarity: "Incomum", category: "noncombat" },
+            { name: "Varinha dos Segredos", price: 1500, rarity: "Incomum", category: "noncombat" },
+            { name: "Luvas de Nadar e Escalar", price: 2000, rarity: "Incomum", category: "noncombat" },
+            { name: "Mochila de Carga de Heward", price: 2000, rarity: "Raro", category: "noncombat" },
+            { name: "Corda de Escalada", price: 2000, rarity: "Incomum", category: "noncombat" },
+            { name: "Anel da Queda Suave", price: 2000, rarity: "Raro", category: "noncombat" },
+            { name: "Botas Élficas", price: 2500, rarity: "Incomum", category: "noncombat" },
+            { name: "Olhos da Visão Minuciosa", price: 2500, rarity: "Incomum", category: "noncombat" },
+            { name: "Olhos da Águia", price: 2500, rarity: "Incomum", category: "noncombat" },
+            { name: "Anel do Salto", price: 2500, rarity: "Incomum", category: "noncombat" },
+            { name: "Grilhões Dimensionais", price: 3000, rarity: "Raro", category: "noncombat" },
+            { name: "Olhos do Encantamento", price: 3000, rarity: "Incomum", category: "noncombat" },
+            { name: "Medalhão dos Pensamentos", price: 3000, rarity: "Incomum", category: "noncombat" },
+            { name: "Anel de Natação", price: 3000, rarity: "Incomum", category: "noncombat" },
+            { name: "Saco de Apetrechos", price: 4000, rarity: "Incomum", category: "noncombat" },
+            { name: "Botas da Levitação", price: 4000, rarity: "Raro", category: "noncombat" },
+            { name: "Anel da Influência Animal", price: 4000, rarity: "Raro", category: "noncombat" },
+            { name: "Botas de Caminhada e Salto", price: 5000, rarity: "Incomum", category: "noncombat" },
+            { name: "Manto de Aracnídeo", price: 5000, rarity: "Muito Raro", category: "noncombat" },
+            { name: "Manto Élfico", price: 5000, rarity: "Incomum", category: "noncombat" },
+            { name: "Luvas da Ladroagem", price: 5000, rarity: "Incomum", category: "noncombat" },
+            { name: "Chapéu do Disfarce", price: 5000, rarity: "Incomum", category: "noncombat" },
+            { name: "Ferraduras da Velocidade", price: 5000, rarity: "Raro", category: "noncombat" },
+            { name: "Vara Imóvel", price: 5000, rarity: "Incomum", category: "noncombat" },
+            { name: "Lanterna da Revelação", price: 5000, rarity: "Incomum", category: "noncombat" },
+            { name: "Amuleto da Saúde", price: 5000, rarity: "Incomum", category: "noncombat" },
+            { name: "Amuleto à Prova de Veneno", price: 5000, rarity: "Raro", category: "noncombat" },
+            { name: "Sapatilhas de Patas de Aranha", price: 5000, rarity: "Incomum", category: "noncombat" },
+            { name: "Manto do Morcego", price: 6000, rarity: "Raro", category: "noncombat" },
+            { name: "Manto da Arraia", price: 6000, rarity: "Incomum", category: "noncombat" },
+            { name: "Anel de Visão de Raio-X", price: 6000, rarity: "Raro", category: "noncombat" },
+            { name: "Manto do Saltimbanco", price: 8000, rarity: "Raro", category: "noncombat" },
+            { name: "Buraco Portátil", price: 8000, rarity: "Raro", category: "noncombat" },
+            { name: "Aparato de Kwalish", price: 10000, rarity: "Lendário", category: "noncombat" },
+            { name: "Botas das Terras Gélidas", price: 10000, rarity: "Incomum", category: "noncombat" },
+            { name: "Barco Dobrável", price: 10000, rarity: "Raro", category: "noncombat" },
+            { name: "Anel da Invisibilidade", price: 10000, rarity: "Lendário", category: "noncombat" },
+            { name: "Elmo da Telepatia", price: 12000, rarity: "Incomum", category: "noncombat" },
+            { name: "Cubo de Força", price: 16000, rarity: "Raro", category: "noncombat" },
+            { name: "Anel da Proteção Mental", price: 16000, rarity: "Incomum", category: "noncombat" },
+            { name: "Vara do Domínio", price: 16000, rarity: "Raro", category: "noncombat" },
+            { name: "Espelho do Aprisionamento", price: 18000, rarity: "Muito Raro", category: "noncombat" },
+            { name: "Amuleto à Prova de Detecção e Localização", price: 20000, rarity: "Incomum", category: "noncombat" },
+            { name: "Manto dos Olhos", price: 30000, rarity: "Raro", category: "noncombat" },
+            { name: "Gema da Visão", price: 32000, rarity: "Raro", category: "noncombat" },
+            { name: "Armadura de Placas da Etéreidade", price: 48000, rarity: "Lendário", category: "noncombat" },
+            // Summoning Items
+            { name: "Cabra de Marfim (Mourejar)", price: 400, rarity: "Raro", category: "summoning" },
+            { name: "Leão Dourado (un)", price: 600, rarity: "Raro", category: "summoning" },
+            { name: "Cabra de Marfim (Viagem)", price: 1000, rarity: "Raro", category: "summoning" },
+            { name: "Cajado da Píton", price: 2000, rarity: "Incomum", category: "summoning" },
+            { name: "Cão de Ônix", price: 3000, rarity: "Raro", category: "summoning" },
+            { name: "Corvo de Prata", price: 5000, rarity: "Incomum", category: "summoning" },
+            { name: "Berrante de Prata de Valhalla", price: 5600, rarity: "Raro", category: "summoning" },
+            { name: "Elefante de Mármore", price: 6000, rarity: "Raro", category: "summoning" },
+            { name: "Tigela de Comandar Elementais da Água", price: 8000, rarity: "Raro", category: "summoning" },
+            { name: "Braseiro de Comandar Elementais do Fogo", price: 8000, rarity: "Raro", category: "summoning" },
+            { name: "Incensário de Controlar Elementais do Ar", price: 8000, rarity: "Raro", category: "summoning" },
+            { name: "Pedra de Controlar Elementais da Terra", price: 8000, rarity: "Raro", category: "summoning" },
+            { name: "Berrante de Latão de Valhalla", price: 8400, rarity: "Raro", category: "summoning" },
+            { name: "Berrante de Bronze de Valhalla", price: 11200, rarity: "Muito Raro", category: "summoning" },
+            { name: "Berrante de Ferro de Valhalla", price: 14000, rarity: "Lendário", category: "summoning" },
+            { name: "Cabra de Marfim (Terror)", price: 20000, rarity: "Raro", category: "summoning" },
+            // Gamechanging Items
+            { name: "Armadura +1", price: 1500, rarity: "Raro", category: "gamechanging" },
+            { name: "Escudo +1", price: 1500, rarity: "Incomum", category: "gamechanging" },
+            { name: "Pedras de Mensagem", price: 2000, rarity: "Incomum", category: "gamechanging" },
+            { name: "Asas Voadoras", price: 5000, rarity: "Raro", category: "gamechanging" },
+            { name: "Jarro de Alquimia", price: 6000, rarity: "Incomum", category: "gamechanging" },
+            { name: "Armadura +2", price: 6000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Escudo +2", price: 6000, rarity: "Raro", category: "gamechanging" },
+            { name: "Mosca de Ébano", price: 6000, rarity: "Raro", category: "gamechanging" },
+            { name: "Grifo de Bronze", price: 8000, rarity: "Raro", category: "gamechanging" },
+            { name: "Vassoura Voadora", price: 8000, rarity: "Incomum", category: "gamechanging" },
+            { name: "Coruja Serpentina", price: 8000, rarity: "Raro", category: "gamechanging" },
+            { name: "Botas Aladas", price: 8000, rarity: "Incomum", category: "gamechanging" },
+            { name: "Armadura de Placas Anã", price: 9000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Poção da Longevidade", price: 9000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Tapete Voador", price: 12000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Anel da Regeneração", price: 12000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Esfera da Aniquilação", price: 15000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Armadura da Invulnerabilidade", price: 18000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Talismã da Esfera", price: 20000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Armadura +3", price: 24000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Escudo +3", price: 24000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Defensora", price: 24000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Anel de Comando Elemental (Terra)", price: 31000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Manto do Arquimago", price: 34000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Anel de Comando Elemental (Ar)", price: 35000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Portão Cúbico", price: 40000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Bola de Cristal", price: 50000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Elmo do Teletransporte", price: 64000, rarity: "Raro", category: "gamechanging" },
+            { name: "Fortaleza Instantânea de Daern", price: 75000, rarity: "Raro", category: "gamechanging" },
+            { name: "Anel da Telecinese", price: 80000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Manto da Invisibilidade", price: 80000, rarity: "Lendário", category: "gamechanging" },
+            { name: "Vara da Segurança", price: 90000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Cajado do Poder", price: 95500, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Corcel de Obsidiana", price: 128000, rarity: "Muito Raro", category: "gamechanging" },
+            { name: "Decantador de Água Infinita", price: 135000, rarity: "Incomum", category: "gamechanging" },
+            { name: "Amuleto dos Planos", price: 160000, rarity: "Muito Raro", category: "gamechanging" }
+        ];
 
-        // Variáveis para guardar os filtros ativos e os dados dos itens
-        let activeRarities = [];
-        let activeTypes = [];
-        let allItems = []; // <-- Esta variável guardará os itens carregados do JSON
+        const categories = {
+            consumables: { title: "Consumíveis", color: "purple", items: [] },
+            combat: { title: "Itens de Combate", color: "red", items: [] },
+            noncombat: { title: "Itens Utilitários", color: "blue", items: [] },
+            summoning: { title: "Itens de Invocação", color: "green", items: [] },
+            gamechanging: { title: "Itens Transformadores", color: "yellow", items: [] }
+        };
 
-        // Função para renderizar os itens na tela
-        function renderItems(itemsToRender) {
-          itemGrid.innerHTML = ""; // Limpa a grade antes de renderizar
-
-          if (itemsToRender.length === 0) {
-            noResultsMessage.style.display = "block";
-          } else {
-            noResultsMessage.style.display = "none";
-          }
-
-          itemsToRender.forEach((item) => {
-            const sintonizacaoHTML = item.sintonizacao
-              ? `<p class="sintonizacao mb-4">Requer Sintonização</p>`
-              : `<div class="h-10"></div>`;
-            const raridadeClass = item.raridade
-              .replace(/ /g, "-")
-              .toLowerCase(); // Ex: "muito-raro"
-            const cardHTML = `
-                    <div class="card p-6">
-                        <h2 class="font-title text-2xl font-bold text-gray-100 mb-2">${
-                          item.nome
-                        }</h2>
-                        <div class="rarity-tag rarity-${raridadeClass} mb-3 self-start">${
-              item.raridade
-            }</div>
-                        ${sintonizacaoHTML}
-                        <p class="text-gray-300 text-base flex-grow">${
-                          item.descricao
-                        }</p>
-                        <div class="price-tag text-lg font-bold mt-6 p-3 text-center rounded-b-lg -m-6 pt-3">${item.preco.toLocaleString(
-                          "pt-BR"
-                        )} PO</div>
-                    </div>
-                `;
-            itemGrid.innerHTML += cardHTML;
-          });
-        }
-
-        // Função principal para aplicar todos os filtros
-        function applyFilters() {
-          const nameQuery = nameFilter.value.toLowerCase();
-          const maxPrice = parseInt(priceFilter.value);
-
-          let filteredItems = allItems.filter((item) => {
-            const nameMatch = item.nome.toLowerCase().includes(nameQuery);
-            const priceMatch = item.preco <= maxPrice;
-            const rarityMatch =
-              activeRarities.length === 0 ||
-              activeRarities.includes(item.raridade);
-            const typeMatch =
-              activeTypes.length === 0 || activeTypes.includes(item.tipo);
-            return (
-              nameMatch && priceMatch && priceMatch && rarityMatch && typeMatch
-            );
-          });
-
-          renderItems(filteredItems);
-        }
-
-        // Função para configurar os botões de filtro (Raridade e Tipo)
-        function setupFilterButtons(buttons, activeList) {
-          buttons.forEach((button) => {
-            button.addEventListener("click", () => {
-              button.classList.toggle("active");
-              const filterValue = button.dataset.rarity || button.dataset.type;
-
-              const index = activeList.indexOf(filterValue);
-              if (index > -1) {
-                activeList.splice(index, 1);
-              } else {
-                activeList.push(filterValue);
-              }
-              applyFilters();
-            });
-          });
-        }
-
-        // ===================================================================================
-        // CARREGAMENTO DOS DADOS DO JSON
-        // O script busca o arquivo 'itens.json' e, quando os dados chegam, inicia a loja.
-        // ===================================================================================
-        fetch("itens.json")
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`Erro de rede! Status: ${response.status}`);
+        const rarityMap = {
+            "Comum": "common",
+            "Incomum": "uncommon",
+            "Raro": "rare",
+            "Muito Raro": "very-rare",
+            "Lendário": "legendary"
+        };
+        
+        // Organiza os itens em suas categorias
+        items.forEach(item => {
+            if(categories[item.category]) {
+                categories[item.category].items.push(item);
             }
-            return response.json();
-          })
-          .then((data) => {
-            allItems = data; // Armazena os dados carregados na variável global
+        });
 
-            // Configuração dos Eventos (Listeners)
-            nameFilter.addEventListener("input", applyFilters);
-            priceFilter.addEventListener("input", () => {
-              priceValue.textContent = parseInt(
-                priceFilter.value
-              ).toLocaleString("pt-BR");
-              applyFilters();
-            });
-            setupFilterButtons(rarityFilters, activeRarities);
-            setupFilterButtons(typeFilters, activeTypes);
-            resetButton.addEventListener("click", () => {
-              nameFilter.value = "";
-              priceFilter.value = 120000;
-              priceValue.textContent = "120.000";
-              activeRarities = [];
-              activeTypes = [];
-              rarityFilters.forEach((btn) => btn.classList.remove("active"));
-              typeFilters.forEach((btn) => btn.classList.remove("active"));
-              applyFilters();
-            });
+        const shopContainer = document.getElementById('item-shop');
 
-            // Renderização inicial dos itens após o carregamento
-            applyFilters();
-          })
-          .catch((error) => {
-            console.error("Falha ao carregar os itens da loja:", error);
-            itemGrid.innerHTML = `<p class="text-red-400 col-span-full text-center">Não foi possível carregar os itens da loja. Verifique o console para mais detalhes.</p>`;
-          });
-      });
+        function renderItems(filter = '') {
+            shopContainer.innerHTML = '';
+            const filterLower = filter.toLowerCase();
+
+            for (const key in categories) {
+                const category = categories[key];
+                const filteredItems = category.items.filter(item => item.name.toLowerCase().includes(filterLower));
+
+                if (filteredItems.length > 0) {
+                    const section = document.createElement('section');
+                    section.id = key;
+                    section.className = 'mb-16';
+
+                    const title = document.createElement('h2');
+                    title.className = `text-4xl font-cinzel font-bold mb-6 border-b-2 border-${category.color}-500/50 pb-2 text-${category.color}-300 category-title`;
+                    title.textContent = category.title;
+                    section.appendChild(title);
+                    
+                    const grid = document.createElement('div');
+                    grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6';
+                    
+                    filteredItems.forEach(item => {
+                        const rarityClass = rarityMap[item.rarity] || 'common';
+                        const card = `
+                            <div class="item-card rounded-lg p-5 flex flex-col h-full rarity-${rarityClass}">
+                                <h3 class="text-xl font-cinzel font-bold text-yellow-100 flex-grow">${item.name}</h3>
+                                <div class="mt-4">
+                                    <p class="text-lg text-yellow-400 font-bold">${typeof item.price === 'number' ? `${item.price.toLocaleString('pt-BR')} PO` : item.price}</p>
+                                    <p class="text-md text-rarity-${rarityClass} font-bold capitalize">${item.rarity}</p>
+                                </div>
+                                <button class="mt-4 w-full bg-purple-600/80 hover:bg-purple-500/80 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">Comprar</button>
+                            </div>
+                        `;
+                        grid.innerHTML += card;
+                    });
+                    
+                    section.appendChild(grid);
+                    shopContainer.appendChild(section);
+                }
+            }
+        }
+        
+        // Renderização inicial e Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            renderItems();
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                renderItems(e.target.value);
+            });
+        });
+
+        // Lógica do botão "Voltar ao Topo"
+        const backToTopBtn = document.getElementById("backToTopBtn");
+        window.onscroll = function() { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                backToTopBtn.style.display = "block";
+            } else {
+                backToTopBtn.style.display = "none";
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
     </script>
-  </body>
+
+</body>
 </html>
